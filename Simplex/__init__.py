@@ -190,6 +190,15 @@ class SimplexSolver():
 	def solve(self):
 		# iterate while the table is not optimal
 		while not self.is_optimal():
+			self.__step()
+
+	def solve_by_step(self):
+		# iterate while the table is not optimal
+		while not self.is_optimal():
+			yield self.__step()
+
+	def __step(self) -> bool:
+		if not self.is_optimal():
 			# save the pivot row and column
 			pivot_row, pivot_col = self.__get_pivot()
 
@@ -210,7 +219,9 @@ class SimplexSolver():
 					# since there is a swap, the side at that row now bomes the header at that col
 					self.__side[pivot_row] = self.__header[pivot_col]
 
-		return self
+					return False
+
+			return True
 
 
 	def get_solution(self):
