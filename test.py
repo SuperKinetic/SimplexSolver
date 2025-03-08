@@ -2,6 +2,7 @@ from Simplex import SimplexSolver as Solver
 from fractions import Fraction
 
 matrix = [
+#	['p',  'x',  'y',  'z', 's1', 's2', 's3', 'value'],
 	['1', '-1', '-2', '-1',  '0',  '0',  '0',   '0'],
 	['0',  '2',  '1',  '5',  '1',  '0',  '0',  '90'],
 	['0',  '4',  '3',  '0',  '0',  '1',  '0',  '72'],
