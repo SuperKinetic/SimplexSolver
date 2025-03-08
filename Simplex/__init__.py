@@ -14,27 +14,27 @@ class SimplexSolver():
 	__slack_variables = None
 
 
-	def check_setup(self, table, variables, slack_variables):
-		# check if table has rows
+	def __checks_check_table_has_rows(self, table):
 		if type(table) is not list:
 			raise Exception(f'the table must be a list')
-
-		# check if the table has columns
+		
+	def __checks_check_table_has_columns(self, table):
 		for row in table:
 			if type(row) is not list:
 				raise Exception(f'every row in the table must be another list')
-			
-		# check if the table is rectangular
+
+	def __checks_check_table_is_rectangular(self, table):
 		if not all(len(i) == len(table[0]) for i in table):
 			raise Exception(f'table must be rectangular')
-		
-		# check if every element in the table is a fraction
+
+
+	def __checks_check_table_has_fractions(self, table):
 		for row in table:
 			for element in row:
 				if type(element) is not Fraction:
 					raise Exception(f'every sub-element in the table must be a fraction')
-				
-				
+	
+	def __checks_check_table_dimensions(self, table, variables, slack_variables):
 		# the rows must have a length of slack_variables + 1, 1 for the P row
 		if len(slack_variables) + 1 != len(table):
 			raise Exception('{{slack_variables + 1}} must be equal to the rows in the table')
@@ -42,7 +42,8 @@ class SimplexSolver():
 		# the columns must have a length of variables + slack variables + 2, 1 for the P column and value column 
 		if len(variables) + len(slack_variables) + 2 != len(table[0]):
 			raise Exception('{{variables + slack_variables + 2}} must be equal to the columns in the table')
-		
+
+	def __checks_check_variable_types(self, variables, slack_variables):
 		# the type of all variables must be a list
 		if type(variables) is not list or type(slack_variables) is not list:
 			raise Exception('variables/slack_variables must be a list')
@@ -57,11 +58,24 @@ class SimplexSolver():
 			if type(element) is not str:
 				raise Exception(f'every element in slack_variables must be a string')
 			
+	def __checks_check_fraction_is_positive(self, table):
 		for row in range(len(table)):
 			for col in range(len(table[0])):
 				if row != 0: # ignore maximise row
 					if table[row][col] < 0:
 						raise Exception(f'cannot have negative values outside of the maximise row at ({row}, {col})')
+		
+	def check_setup(self, table, variables, slack_variables):
+		self.__checks_check_table_has_rows(table)
+		self.__checks_check_table_has_columns(table)
+		self.__checks_check_table_is_rectangular(table)
+		self.__checks_check_table_has_fractions(table)
+				
+		self.__checks_check_table_dimensions(table, variables, slack_variables)
+		self.__checks_check_variable_types(variables, slack_variables)
+		self.__checks_check_fraction_is_positive(table)
+
+		
 		
 
 	def __init__(self, table, variables, slack_variables, skip_checks = False):
